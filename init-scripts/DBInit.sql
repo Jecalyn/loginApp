@@ -3,22 +3,44 @@ CREATE TABLE IF NOT EXISTS risk_factors (
     factor_key VARCHAR(50) NOT NULL UNIQUE,
     factor_name VARCHAR(100) NOT NULL,
     score INT NOT NULL,
-    description VARCHAR(255)
+    description VARCHAR(255),
+	recommended_action VARCHAR(255)
 );
 
 -- Insert data
-INSERT INTO risk_factors (factor_key, factor_name, score, description) VALUES
-('UNTRUSTED_DEVICE', 'Untrusted Device', 20, 'Device not recognized / new device'),
-('DEVICE_FINGERPRINT_CHANGED', 'Device Fingerprint Changed', 25, 'Browser/OS signature changed'),
-('NEW_IP', 'New IP Address', 10, 'Login from a new IP'),
-('NEW_COUNTRY', 'New Country', 30, 'Login from a different country'),
-('VPN', 'VPN / Proxy Detected', 20, 'VPN, Proxy, or anonymizer detected'),
-('BLACKLISTED_IP', 'Blacklisted IP', 50, 'IP flagged as malicious'),
-('UNUSUAL_TIME', 'Unusual Login Time', 15, 'Login outside normal hours'),
-('IMPOSSIBLE_TRAVEL', 'Impossible Travel', 40, 'Geolocation too far from previous login'),
-('FAILED_ATTEMPT_3', '3 Failed Login Attempts', 15, 'Possible brute-force attempt'),
-('FAILED_ATTEMPT_4', '4 Failed Login Attempts', 25, 'Higher risk of brute-force'),
-('FAILED_ATTEMPT_5', '5+ Failed Login Attempts', 35, 'High risk, account may be locked');
+INSERT INTO risk_factors (factor_key, factor_name, score, description, recommended_action) VALUES
+('UNTRUSTED_DEVICE', 'Untrusted Device', 20, 'Device not recognized / new device',
+ 'Require step-up authentication and verify the device before allowing access'),
+
+('DEVICE_FINGERPRINT_CHANGED', 'Device Fingerprint Changed', 25, 'Browser/OS signature changed',
+ 'Review device changes and require additional verification if needed'),
+
+('NEW_IP', 'New IP Address', 10, 'Login from a new IP',
+ 'Monitor the new IP address and trigger extra verification if behaviour is unusual'),
+
+('NEW_COUNTRY', 'New Country', 30, 'Login from a different country',
+ 'Review geo-location anomaly and require OTP or stronger authentication'),
+
+('VPN', 'VPN / Proxy Detected', 20, 'VPN, Proxy, or anonymizer detected',
+ 'Monitor proxy usage and consider stricter rules for anonymized connections'),
+
+('BLACKLISTED_IP', 'Blacklisted IP', 50, 'IP flagged as malicious',
+ 'Block the request immediately and investigate the malicious source'),
+
+('UNUSUAL_TIME', 'Unusual Login Time', 15, 'Login outside normal hours',
+ 'Monitor off-hours access and require step-up authentication if necessary'),
+
+('IMPOSSIBLE_TRAVEL', 'Impossible Travel', 40, 'Geolocation too far from previous login',
+ 'Flag the session for review and require strong re-authentication'),
+
+('FAILED_ATTEMPT_3', '3 Failed Login Attempts', 15, 'Possible brute-force attempt',
+ 'Warn the user and monitor for additional failed attempts'),
+
+('FAILED_ATTEMPT_4', '4 Failed Login Attempts', 25, 'Higher risk of brute-force',
+ 'Trigger OTP and closely monitor suspicious login behaviour'),
+
+('FAILED_ATTEMPT_5', '5+ Failed Login Attempts', 35, 'High risk, account may be locked',
+ 'Temporarily block access or lock the account pending review');
 
 CREATE TABLE IF NOT EXISTS risk_decisions (
     id SERIAL PRIMARY KEY,
