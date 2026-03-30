@@ -48,14 +48,15 @@ CREATE TABLE IF NOT EXISTS risk_decisions (
     max_score INT NOT NULL,
     decision_key VARCHAR(50) NOT NULL UNIQUE,
     decision_name VARCHAR(50) NOT NULL,
+	risk_level VARCHAR(20) NOT NULL,
     color VARCHAR(20)
 );
 
 -- Insert data
-INSERT INTO risk_decisions (min_score, max_score, decision_key, decision_name, color) VALUES
-(0, 29, 'ALLOW', 'ALLOW', '#22c55e'),
-(30, 59, 'REQUIRE_OTP', 'Require OTP', '#f59e0b'),
-(60, 9999, 'BLOCK', 'BLOCK', '#ef4444');
+INSERT INTO risk_decisions (min_score, max_score, decision_key, decision_name, risk_level, color) VALUES
+(0, 29, 'ALLOW', 'ALLOW','LOW','#22c55e'),
+(30, 59, 'REQUIRE_OTP', 'Require OTP','MEDIUM', '#f59e0b'),
+(60, 9999, 'BLOCK', 'BLOCK','HIGH', '#ef4444');
 
 -- Simulation Results (Single + Bulk)
 DO $$
